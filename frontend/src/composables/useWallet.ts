@@ -40,9 +40,13 @@ export function useWallet() {
         
         // 檢查白名單狀態
         await checkWhitelistStatus(connectedAddress)
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to connect wallet:', error)
-        alert('連接錢包失敗: ' + (error as Error).message)
+        if (error?.message === 'METAMASK_PENDING' || error?.code === -32002) {
+          alert('MetaMask 有一個待確認的請求，請點擊瀏覽器右上角的 MetaMask 圖示，確認或拒絕後再試一次。')
+        } else {
+          alert('連接錢包失敗: ' + (error as Error).message)
+        }
       } finally {
         isLoading.value = false
       }

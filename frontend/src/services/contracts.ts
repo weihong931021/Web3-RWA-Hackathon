@@ -148,7 +148,10 @@ export async function connectWallet(forceSelect = false): Promise<string> {
         method: 'wallet_requestPermissions',
         params: [{ eth_accounts: {} }],
       })
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.code === -32002) {
+        throw new Error('METAMASK_PENDING')
+      }
       console.log('User cancelled account selection')
       // 如果用戶取消，繼續使用當前帳戶
     }
